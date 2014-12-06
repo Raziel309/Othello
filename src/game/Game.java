@@ -7,11 +7,18 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import java.awt.Font;
+
+import org.newdawn.slick.*;
+import org.newdawn.slick.font.effects.ColorEffect;
+
 public class Game {
 	public int x=40;
 	public int y=300;
 	public int turn = 1;
 	public int[][] board;
+	UnicodeFont font;
+	
 	public static void main(String[] args)
 	{
 		Game main = new Game();
@@ -21,7 +28,7 @@ public class Game {
 	public void run()
 	{
 		try {
-			Display.setDisplayMode(new DisplayMode(800,800));
+			Display.setDisplayMode(new DisplayMode(800,900));
 			Display.create();
 		} catch (LWJGLException e) {
 			e.printStackTrace();
@@ -29,7 +36,7 @@ public class Game {
 		}
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
-		GL11.glOrtho(0, 800, 0, 800, 1, -1);
+		GL11.glOrtho(0, 800, 0, 900, 1, -1);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		setup();
 		drawBackground();
@@ -52,6 +59,14 @@ public class Game {
 			{
 				doMove();
 			}
+			int win = checkWin();
+			if(win!=0)
+			{
+				if(win==1)
+					font.drawString(100, 50, "Black wins!", Color.red);
+				if(win==2)
+					font.drawString(100, 50, "White wins!", Color.red);
+			}
 			Display.update();
 		}
 		Display.destroy();
@@ -64,11 +79,52 @@ public class Game {
 		board[3][4]=2;
 		board[4][3]=2;
 		board[4][4]=1;
+		
+		// load a default java font
+	    Font awtFont = new Font("Times New Roman", Font.BOLD, 24);
+	    font = new UnicodeFont(awtFont);
+	    font.getEffects().add(new ColorEffect(java.awt.Color.white));
+	    font.addAsciiGlyphs();
+	    try{
+	    font.loadGlyphs();
+	    }
+	    catch(Exception e)
+	    {
+	    	System.out.println("Is this what's wrong?");
+	    }
+	         
+
+	}
+	
+	public int checkWin()
+	{
+		int [] count = new int[3];
+		for(int i = 0; i<board.length;i++)
+		{
+			for(int j = 0; j<board[i].length;j++)
+			{
+				count[board[i][j]]++;
+			}
+		}
+		if(count[0]==0)
+			return count[1]>count[2]?1:2;
+			if(count[1]==0)
+				return 2;	
+			if(count[2]==0)
+				return 1;
+			return 0;
+	}
+	
+	public boolean oInput()
+	{
+		return false;
 	}
 
 	public boolean doMove()
 	{
 		//check legality
+		if(x>800||y>800)
+			return oInput();
 		if(board[x/100][y/100]!=0)
 		return false;
 		if(!checkFlips(turn,x/100,y/100))
@@ -157,21 +213,6 @@ public class Game {
 			}
 		}
 		//up-right
-		/*for(int j=xPos+1;j<8;j++)
-		{
-			if(tBoard[j][j]==0)
-				break;
-			if(tBoard[j][j]==color)
-			{
-				if(Math.abs(xPos-j)<=1)
-					break;
-				for(int c=j;c>xPos;c--)
-				{
-					tBoard[c][c]=color;
-				}
-				valid=true;
-			}
-		}*/
 		int d=1;
 		while(true)
 		{
@@ -259,38 +300,6 @@ public class Game {
 			if(xPos-d<0||yPos+d>7)
 				break;
 		}
-		//diagonals 3
-		/*for(int j=xPos+1;j<8;j++)
-		{
-			if(tBoard[j][j]==0)
-				break;
-			if(tBoard[j][j]==color)
-			{
-				if(Math.abs(xPos-j)<=1)
-					break;
-				for(int c=j;c>xPos;c--)
-				{
-					tBoard[c][c]=color;
-				}
-				valid=true;
-			}
-		}
-		//diagonals 4
-		for(int j=xPos+1;j<8;j++)
-		{
-			if(tBoard[j][j]==0)
-				break;
-			if(tBoard[j][j]==color)
-			{
-				if(Math.abs(xPos-j)<=1)
-					break;
-				for(int c=j;c>xPos;c--)
-				{
-					tBoard[c][c]=color;
-				}
-				valid=true;
-			}
-		}*/
 		
 		if(valid)
 			for(int i = 0; i<board.length;i++)
@@ -317,6 +326,7 @@ public class Game {
 	
 	public void drawBackground()
 	{
+		//font.drawString(100, 850, "Pass", Color.green);
 		GL11.glColor3f(0,.5f,0);
 		// draw quad
 		GL11.glBegin(GL11.GL_QUADS);
@@ -342,25 +352,6 @@ public class Game {
 	
 	public void drawCircle(float cx, float cy, float r, int num_segments, int color) 
 	{ 
-		/*float theta = 2 * 3.1415926f / (float)num_segments; 
-		float c = (float)Math.cos(theta);//precalculate the sine and cosine
-		float s = (float)Math.sin(theta);
-		float t;
-
-		float x = r;//we start at angle = 0 
-		float y = 0; 
-	    
-		GL11.glBegin(GL11.GL_LINE_LOOP); 
-		for(int ii = 0; ii < num_segments; ii++) 
-		{ 
-			GL11.glVertex2f(x + cx, y + cy);//output vertex 
-	        
-			//apply the rotation matrix
-			t = x;
-			x = c * x - s * y;
-			y = s * t + c * y;
-		} 
-		GL11.glEnd();*/
 		if(color==1)
 			GL11.glColor3f(0.0f, 0.0f, 0.0f);
 		else
@@ -384,7 +375,7 @@ public class Game {
 		if (Mouse.isButtonDown(0)) {
 			x = Mouse.getX();
 			y = Mouse.getY();
-			System.out.println("MOUSE DOWN @ X: " + x + " Y: " + y);
+			//System.out.println("MOUSE DOWN @ X: " + x + " Y: " + y);
 			return true;
 		}
 		return false;
