@@ -1,6 +1,6 @@
 
 public class Test {
 	public static void main(String args[]) {
-		System.out.println("hello there son");
+		System.out.println("Hello there, you dirty LISP programmer.");
 	}
 }
