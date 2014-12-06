@@ -55,41 +55,36 @@ public class Game {
 			GL11.glVertex2f(x,y+200);
 			GL11.glEnd();*/
 			//System.out.println("Looping always");
-			if(pollInput())
-			{
-				doMove();
-			}
+			if(pollInput()) { doMove(); }
 			int win = checkWin();
-			if(win!=0)
-			{
-				if(win==1)
-					font.drawString(100, 50, "Black wins!", Color.red);
-				if(win==2)
-					font.drawString(100, 50, "White wins!", Color.red);
-			}
+			if(win!=0) {
+        String message = null;
+				if(win==1) { message = "Black wins!"; }
+				if(win==2) { message = "White wins!"; }
+        font.drawString(100, 50, message, Color.red);
+      }
 			Display.update();
 		}
 		Display.destroy();
 	}
 	
-	public void setup()
-	{
-		board = new int[8][8];
-		board[3][3]=1;
-		board[3][4]=2;
-		board[4][3]=2;
-		board[4][4]=1;
-		
+	public void setup() {
+		board = {{0,0,0,0,0,0,0,0},
+             {0,0,0,0,0,0,0,0},
+             {0,0,0,0,0,0,0,0},
+             {0,0,0,1,2,0,0,0},
+             {0,0,0,2,1,0,0,0},
+             {0,0,0,0,0,0,0,0},
+             {0,0,0,0,0,0,0,0},
+             {0,0,0,0,0,0,0,0}}
+    //
 		// load a default java font
 	    Font awtFont = new Font("Times New Roman", Font.BOLD, 24);
 	    font = new UnicodeFont(awtFont);
 	    font.getEffects().add(new ColorEffect(java.awt.Color.white));
 	    font.addAsciiGlyphs();
-	    try{
-	    font.loadGlyphs();
-	    }
-	    catch(Exception e)
-	    {
+	    try { font.loadGlyphs(); }
+	    catch(Exception e) {
 	    	System.out.println("Is this what's wrong?");
 	    }
 	         
@@ -119,87 +114,52 @@ public class Game {
 		if(!checkFlips(turn,x/100,y/100)) { return false;   }
 
 		board[x/100][y/100]=turn;
-    // this code is terser than the below
 		turn = (turn == 1) ? 2 : 1;
-    /*if(turn==1)
-			turn=2;
-		else
-			turn=1; */
 		return true;
 	}
 	
 	public boolean checkFlips(int color, int xPos, int yPos)
 	{
-		boolean valid=false;
-		int [][] tBoard = new int[8][8];
-		for(int i = 0; i<board.length;i++)
-		{
-			for(int j = 0; j<board[i].length;j++)
-			{
+		boolean valid = false;
+		int tBoard[][] = new int[8][8];
+		for(int i = 0; i<board.length;i++) {
+			for(int j = 0; j<board[i].length;j++) {
 				tBoard[i][j]=board[i][j];
 			}
 		}
 		//down
-		for(int i=yPos-1;i>0;i--)
-		{
-			if(tBoard[xPos][i]==0)
-				break;
-			if(tBoard[xPos][i]==color)
-			{
-				if(Math.abs(yPos-i)<=1)
-					break;
-				for(int r=i;r<yPos;r++)
-				{
-					tBoard[xPos][r]=color;
-				}
+		for(int i=yPos-1;i>0;i--) {
+			if(tBoard[xPos][i]==0) { break; }
+			if(tBoard[xPos][i]==color) {
+				if(Math.abs(yPos-i)<=1) { break; }
+				for(int r=i;r<yPos;r++) { tBoard[xPos][r]=color; }
 				valid=true;
 			}
 		}
 		//up
-		for(int i=yPos+1;i<8;i++)
-		{
-			if(tBoard[xPos][i]==0)
-				break;
-			if(tBoard[xPos][i]==color)
-			{
-				if(Math.abs(yPos-i)<=1)
-					break;
-				for(int r=i;r>yPos;r--)
-				{
-					tBoard[xPos][r]=color;
-				}
+		for(int i=yPos+1;i<8;i++) {
+			if(tBoard[xPos][i]==0) { break; }
+			if(tBoard[xPos][i]==color) {
+				if(Math.abs(yPos-i)<=1) { break;}
+				for(int r=i;r>yPos;r--) { tBoard[xPos][r]=color; }
 				valid=true;
 			}
 		}
 		//left
-		for(int j=xPos-1;j>0;j--)
-		{
-			if(tBoard[j][yPos]==0)
-				break;
-			if(tBoard[j][yPos]==color)
-			{
-				if(Math.abs(xPos-j)<=1)
-					break;
-				for(int c=j;c<xPos;c++)
-				{
-					tBoard[c][yPos]=color;
-				}
+		for(int j=xPos-1;j>0;j--) {
+			if(tBoard[j][yPos]==0) { break; }
+			if(tBoard[j][yPos]==color) {
+				if(Math.abs(xPos-j)<=1) { break; }
+				for(int c=j;c<xPos;c++) { tBoard[c][yPos]=color; }
 				valid=true;
 			}
 		}
 		//right
-		for(int j=xPos+1;j<8;j++)
-		{
-			if(tBoard[j][yPos]==0)
-				break;
-			if(tBoard[j][yPos]==color)
-			{
-				if(Math.abs(xPos-j)<=1)
-					break;
-				for(int c=j;c>xPos;c--)
-				{
-					tBoard[c][yPos]=color;
-				}
+		for(int j=xPos+1;j<8;j++) {
+			if(tBoard[j][yPos]==0) { break; }
+			if(tBoard[j][yPos]==color) {
+				if(Math.abs(xPos-j)<=1) { break; }
+				for(int c=j;c>xPos;c--) { tBoard[c][yPos]=color; }
 				valid=true;
 			}
 		}
