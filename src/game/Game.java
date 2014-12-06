@@ -13,12 +13,12 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.font.effects.ColorEffect;
 
 public class Game {
-	public int x=40;
-	public int y=300;
+	// OUTDATED : public int x=40;
+	// OUTDATED : public int y=300;
 	public int turn = 1;
 	public int[][] board;
 	UnicodeFont font;
-	
+
 	public static void main(String[] args)
 	{
 		Game main = new Game();
@@ -95,45 +95,36 @@ public class Game {
 	         
 
 	}
-	
-	public int checkWin()
-	{
+
+  // What do 0, 1, and 2 represent as return values?  
+	public int checkWin() {
 		int [] count = new int[3];
-		for(int i = 0; i<board.length;i++)
-		{
-			for(int j = 0; j<board[i].length;j++)
-			{
-				count[board[i][j]]++;
+		for(int i = 0; i<board.length;++i) {
+			for(int j = 0; j<board[i].length;++j) {
+				++count[board[i][j]];
 			}
 		}
-		if(count[0]==0)
-			return count[1]>count[2]?1:2;
-			if(count[1]==0)
-				return 2;	
-			if(count[2]==0)
-				return 1;
-			return 0;
+		if     (count[0]==0) { return count[1]>count[2] ? 1 : 2; }
+    else if(count[1]==0) { return 2; }
+    else if(count[2]==0) { return 1; }
+    else                 { return 0; }
 	}
 	
-	public boolean oInput()
-	{
-		return false;
-	}
+	public boolean oInput() { return false; }
 
-	public boolean doMove()
-	{
+	public boolean doMove() {
 		//check legality
-		if(x>800||y>800)
-			return oInput();
-		if(board[x/100][y/100]!=0)
-		return false;
-		if(!checkFlips(turn,x/100,y/100))
-			return false;
+		if(x>800 || y>800)                { return oInput();}
+		if(board[x/100][y/100] != 0)      { return false;   }
+		if(!checkFlips(turn,x/100,y/100)) { return false;   }
+
 		board[x/100][y/100]=turn;
-		if(turn==1)
+    // this code is terser than the below
+		turn = (turn == 1) ? 2 : 1;
+    /*if(turn==1)
 			turn=2;
 		else
-			turn=1;
+			turn=1; */
 		return true;
 	}
 	
