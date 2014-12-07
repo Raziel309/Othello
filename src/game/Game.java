@@ -13,10 +13,7 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.font.effects.ColorEffect;
 
 public class Game {
-	// OUTDATED : public int x=40;
-	// OUTDATED : public int y=300;
 	public int turn = 1;
-	public int[][] board;
 	UnicodeFont font;
 
 	public static void main(String[] args)
@@ -69,15 +66,8 @@ public class Game {
 	}
 	
 	public void setup() {
-		board = {{0,0,0,0,0,0,0,0},
-             {0,0,0,0,0,0,0,0},
-             {0,0,0,0,0,0,0,0},
-             {0,0,0,1,2,0,0,0},
-             {0,0,0,2,1,0,0,0},
-             {0,0,0,0,0,0,0,0},
-             {0,0,0,0,0,0,0,0},
-             {0,0,0,0,0,0,0,0}}
-    //
+    
+  
 		// load a default java font
 	    Font awtFont = new Font("Times New Roman", Font.BOLD, 24);
 	    font = new UnicodeFont(awtFont);

@@ -1,7 +1,7 @@
 package game;
 
 public class GameGrid {
-	public static final int NOTHING = 0, JUST_WHITE = 1, JUST_BLACK = 2, ERROR = -1;
+  public static final int NOTHING = 0, JUST_WHITE = 1, JUST_BLACK = 2, ERROR = -1;
 
   // ----> PUBLIC PROCEDURES <----
   // precondition : canPlace(x,y,pieceType)
@@ -14,8 +14,12 @@ public class GameGrid {
     }
   }
 
+  // precondition : pieceType != NOTHING
   public boolean canPlace(int x, int y, int pieceType) {
     int oldPiece = get(x,y);
+
+    if (oldPiece != NOTHING) { return false; }
+
     set(x,y,pieceType); // BOARD MODIFIED :(
 
     boolean canPlace = false;
@@ -30,6 +34,20 @@ public class GameGrid {
     return canPlace;
   }
 
+  public boolean isGameOver() {
+    return !(canPieceMove(JUST_WHITE) || canPieceMove(JUST_BLACK));
+  }
+
+  // precondition : pieceType != NOTHING
+  public boolean canPieceMove(int pieceType) {
+    for (int x = 0; x != grid.length; ++x) {
+      for (int y = 0; y != grid[x].length; ++y) {
+        if (canPlace(x,y,pieceType)) { return true; }
+      }
+    }
+    return true;
+  }
+
 	// Places `pieceType` at location (x, y).
   private void set(int x, int y, int pieceType) {
     if (inBounds(x,y)) { grid[x][y] = pieceType; }
@@ -38,7 +56,7 @@ public class GameGrid {
   private int get(int x, int y) {
     if (inBounds(x,y)) { return grid[x][y]; }
     else               { return NOTHING;    }
-  }  
+  } 
 
   // Flips the piece at (x, y).
   private void flip(int x, int y) {
