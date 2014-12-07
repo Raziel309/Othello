@@ -7,38 +7,41 @@ public class GameGrid {
   // precondition : canPlace(x,y,pieceType)
   public void place(int x, int y, int pieceType) {
     set(x,y, pieceType);
-    int deltas[][] = {{-1,-1},  // up-left
-                      {-1, 0},  // left
-                      {-1, 1},  // down-left
-                      {0 ,-1},  // up
-                      {0 , 1},  // down
-                      {1 ,-1},  // up-right
-                      {1 , 0},  // right
-                      {1 , 1}}; // down-right
-    final int X = 0, Y = 1;
-
-    for (int delta[] : deltas) {
-      if (canFlipOnDelta(x,y,delta[X], delta[Y])) {
-        flipOnDelta(x, y, delta[X], delta[Y]);
+    for (int direction[] : DIRECTIONS) {
+      if (canFlipOnDelta(x,y,direction[DIR_X], direction[DIR_Y])) {
+        flipOnDelta(x, y, direction[DIR_X], direction[DIR_Y]);
       }
     }
   }
 
   public boolean canPlace(int x, int y, int pieceType) {
-    return false; // add implementation!!!!!!
+    int oldPiece = get(x,y);
+    set(x,y,pieceType); // BOARD MODIFIED :(
+
+    boolean canPlace = false;
+
+    for (int direction[] : DIRECTIONS) {
+      if (canFlipOnDelta(x, y, direction[DIR_X], direction[DIR_Y])) {
+        canPlace = true;
+      }
+    }
+
+    set(x,y,oldPiece); // BOARD RESET :)
+    return canPlace;
   }
+
 	// Places `pieceType` at location (x, y).
-  public void set(int x, int y, int pieceType) {
+  private void set(int x, int y, int pieceType) {
     if (inBounds(x,y)) { grid[x][y] = pieceType; }
   }
 	
-  public int get(int x, int y) {
+  private int get(int x, int y) {
     if (inBounds(x,y)) { return grid[x][y]; }
     else               { return NOTHING;    }
   }  
 
   // Flips the piece at (x, y).
-  public void flip(int x, int y) {
+  private void flip(int x, int y) {
     int piece = get(x,y);
     if (piece == NOTHING)    { set(x,y,NOTHING);    }
     if (piece == JUST_WHITE) { set(x,y,JUST_BLACK); }
@@ -71,16 +74,26 @@ public class GameGrid {
   private final int DEFAULT_WIDTH  = 8,
                     DEFAULT_HEIGHT = 8;
 
+  private final int DIRECTIONS[][] = {{-1,-1},  // up-left
+                                      {-1, 0},  // left
+                                      {-1, 1},  // down-left
+                                      {0 ,-1},  // up
+                                      {0 , 1},  // down
+                                      {1 ,-1},  // up-right
+                                      {1 , 0},  // right
+                                      {1 , 1}}; // down-right
+  final int DIR_X = 0, DIR_Y = 1;
+
   // ----> CONSTRUCTION <----
   public GameGrid(int width, int height) { grid = new int[width][height];       }
   public GameGrid()                      { this(DEFAULT_WIDTH, DEFAULT_HEIGHT); }
   
   // ----> AUXILARY FUNCTIONS <----
-  public boolean inBounds(x,y) {
+  private boolean inBounds(x,y) {
     return !(x < 0 || y < 0 || x > grid.length || y > grid[0].length);
   }
 
-  public int opposite(int pieceType) {
+  private int opposite(int pieceType) {
     if (pieceType == NOTHING)    { return NOTHING;    }
     if (pieceType == JUST_WHITE) { return JUST_BLACK; }
     if (pieceType == JUST_BLACK) { return JUST_WHITE; }
