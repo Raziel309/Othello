@@ -1,7 +1,7 @@
 package game;
 
 public class GameGrid {
-	public static final int NOTHING = 0, JUST_WHITE = 1, JUST_BLACK = 2;
+	public static final int NOTHING = 0, JUST_WHITE = 1, JUST_BLACK = 2, ERROR = -1;
 
   // ----> PUBLIC PROCEDURES <----
   // precondition : canPlace(x,y,pieceType)
@@ -71,17 +71,17 @@ public class GameGrid {
 
   // ----> IMPLEMENTATION DETAILS <----
   private int grid[][];
-  private final int DEFAULT_WIDTH  = 8,
-                    DEFAULT_HEIGHT = 8;
-
-  private final int DIRECTIONS[][] = {{-1,-1},  // up-left
-                                      {-1, 0},  // left
-                                      {-1, 1},  // down-left
-                                      {0 ,-1},  // up
-                                      {0 , 1},  // down
-                                      {1 ,-1},  // up-right
-                                      {1 , 0},  // right
-                                      {1 , 1}}; // down-right
+  private static final int DEFAULT_WIDTH  = 8,
+                           DEFAULT_HEIGHT = 8;
+ 
+  private static final int DIRECTIONS[][] = {{-1,-1},  // up-left
+                                             {-1, 0},  // left
+                                             {-1, 1},  // down-left
+                                             {0 ,-1},  // up
+                                             {0 , 1},  // down
+                                             {1 ,-1},  // up-right
+                                             {1 , 0},  // right
+                                             {1 , 1}}; // down-right
   final int DIR_X = 0, DIR_Y = 1;
 
   // ----> CONSTRUCTION <----
@@ -89,7 +89,7 @@ public class GameGrid {
   public GameGrid()                      { this(DEFAULT_WIDTH, DEFAULT_HEIGHT); }
   
   // ----> AUXILARY FUNCTIONS <----
-  private boolean inBounds(x,y) {
+  private boolean inBounds(int x, int y) {
     return !(x < 0 || y < 0 || x > grid.length || y > grid[0].length);
   }
 
@@ -97,4 +97,6 @@ public class GameGrid {
     if (pieceType == NOTHING)    { return NOTHING;    }
     if (pieceType == JUST_WHITE) { return JUST_BLACK; }
     if (pieceType == JUST_BLACK) { return JUST_WHITE; }
+    else { return ERROR; } // should not reach here
+  }
 }
