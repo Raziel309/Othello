@@ -1,5 +1,14 @@
 package game;
-
+/*
+ * public procedures
+ * =================
+ *
+ * place(x,y,piece)
+ * canPlace(x,y,piece)
+ * isGameOver()
+ * canPieceMove(piece)
+ * numPiece(piece)
+ */
 public class GameGrid {
   public static final int NOTHING = 0, JUST_WHITE = 1, JUST_BLACK = 2, ERROR = -1;
 
@@ -46,6 +55,16 @@ public class GameGrid {
       }
     }
     return true;
+  }
+
+  public int numPieces(int pieceType) {
+    int pieceCount = 0;
+    for (int x = 0; x != grid.length; ++x) {
+      for (int y = 0; y != grid[x].length; ++y) {
+        if (get(x,y) == pieceType) { ++pieceCount; }
+      }
+    }
+    return pieceCount;
   }
 
 	// Places `pieceType` at location (x, y).
