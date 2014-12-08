@@ -8,6 +8,8 @@ package game;
  * isGameOver()
  * canPieceMove(piece)
  * numPiece(piece)
+ * width()
+ * height()
  */
 public class GameGrid {
   public static final int NOTHING = 0, JUST_WHITE = 1, JUST_BLACK = 2, ERROR = -1;
@@ -66,6 +68,9 @@ public class GameGrid {
     }
     return pieceCount;
   }
+
+  public int width()  { return grid.length;    }
+  public int height() { return grid[0].length; }
 
 	// Places `pieceType` at location (x, y).
   private void set(int x, int y, int pieceType) {

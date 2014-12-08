@@ -13,7 +13,110 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.font.effects.ColorEffect;
 
 public class Game {
-	public int turn = 1;
+  public Game() {
+    setup();
+  }
+
+  // ----> MAIN LOOP <----
+  public void mainLoop() {
+    while (!Display.isClosedRequested()) {
+      draw();
+      update();
+      Display.update();
+    }
+    Display.destroy();
+  }
+
+  private void draw() {
+    drawBackground();
+    drawBoard();
+  
+  }
+
+  private void drawBackground() {
+    //font.drawString(100, 850, "Pass", Color.green);
+    GL11.glColor3f(0,0.5f,0);
+    // draw quad
+    GL11.glBegin(GL11.GL_QUADS);
+    GL11.glVertex2f(0,0);
+    GL11.glVertex2f(800,0);
+    GL11.glVertex2f(800,800);
+    GL11.glVertex2f(0,800);
+    GL11.glColor3f(0.0f, 0.0f, 0.0f);
+    GL11.gLEnd();
+
+    for (int i = 1; i != 8; ++i) {
+      final int newI = i * 100;
+
+      GL11.glBegin(GL11.GL_LINE_STRIP);
+      GL11.glVertex2d(newI, 0);
+      GL11.glVertex2d(newI, 800);
+      GL11.glEnd();
+
+      GL11.glBegin(GL11.GL_LINE_STRIP);
+      GL11.glVertex2d(0, newI);
+      GL11.glVertex2d(800, newI);
+      GL11.gLEnd();
+    }
+  }
+
+  private void drawBoard() {
+    for (int x = 0; x != gameGrid.width(); ++x) {
+      for (int y = 0; y != gameGrid.height(); ++y) {
+        drawCircle(100 * x + 5, 100 * y + 50, 50, 100, gameGrid.get(x,y));
+      }
+    }
+  }
+
+  public void drawCircle(float cx, float cy, float r, int numSegments, int pieceType) {
+    final float color[][] = new float[3][4];
+    color[GameGrid.NOTHING]    = {0.0, 0.0, 0.0, 0.0};
+    color[GameGrid.JUST_WHITE] = {1.0, 1.0, 1.0, 1.0};
+    color[GameGrid.JUST_BLACK] = {0.0, 0.0, 0.0, 1.0};
+
+    GL11.glPushMatrix();
+    GL11.glTranslatef(cx,cy,0);
+    GL11.glScalef(r, r, 1);
+    
+    GL11.glBegin(GL11.GL_TRIANGLE_FAN);
+    GL11.glVertex2f(0, 0);
+    for (int i = 0; i != num_segments; ++i) {
+      final double angle = Math.PI * 2 * i / numSegments;
+      GL11.glVertex2d(Math.cos(angle), Math.sin(angle));
+    }
+    GL11.glEnd();
+
+    GL11.glPopMatrix();
+  }
+
+  // ----> SETUP <----
+  private void setup() throws LWJGLException {
+    setupGameGrid();
+    setupOpenGL();
+  }
+
+  private void setupGameGrid() {
+    gameGrid = new GameGrid();
+  }
+
+  private void setupOpenGL() throws LWJGLException {
+    Display.setDisplayMode(new DisplayMode(800,900));
+    Display.create();
+
+    GL11.glMatrixMode(GL11.GL_PROJECTION);
+    GL11.glLoadIdentity();
+    GL11.glOrtho(0, 800, 0, 900, 1, -1);
+
+    // load a default java font
+    Font awtFont = new Font("Times New Roman", Font.BOLD, 24);
+    font = new Unicode(awtFont);
+    font.getEffects().add(new ColorEffect(java.awt.Color.white));
+    font.addAsciiGlyphs();
+    font.loadGlyphs();
+  }
+}
+/*
+  public int turn = 1;
 	UnicodeFont font;
 
 	public static void main(String[] args)
@@ -50,7 +153,7 @@ public class Game {
 			GL11.glVertex2f(x+200,y);
 			GL11.glVertex2f(x+200,y+200);
 			GL11.glVertex2f(x,y+200);
-			GL11.glEnd();*/
+			GL11.glEnd();
 			//System.out.println("Looping always");
 			if(pollInput()) { doMove(); }
 			int win = checkWin();
@@ -344,6 +447,6 @@ public class Game {
 					System.out.println("D Key Released");
 				}
 			}
-		}*/
+		}
 	}
-}
+}*/
