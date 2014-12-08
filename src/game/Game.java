@@ -65,8 +65,7 @@ public class Game {
 		Display.destroy();
 	}
 	
-	public void setup() {
-    
+	public void setup() {   
   
 		// load a default java font
 	    Font awtFont = new Font("Times New Roman", Font.BOLD, 24);
