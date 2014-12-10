@@ -1,4 +1,5 @@
 package game;
+
 /*
  * public procedures
  * =================
@@ -12,7 +13,7 @@ package game;
  * height()
  */
 public class GameGrid {
-  public static final int NOTHING = 0, JUST_WHITE = 1, JUST_BLACK = 2, ERROR = -1;
+  public static final int NOTHING = 0, JUST_WHITE = 1, JUST_BLACK = -1;
 
   // ----> PUBLIC PROCEDURES <----
   // precondition : canPlace(x,y,pieceType)
@@ -51,8 +52,8 @@ public class GameGrid {
 
   // precondition : pieceType != NOTHING
   public boolean canPieceMove(int pieceType) {
-    for (int x = 0; x != grid.length; ++x) {
-      for (int y = 0; y != grid[x].length; ++y) {
+    for (int x = 0; x != width(); ++x) {
+      for (int y = 0; y != height(); ++y) {
         if (canPlace(x,y,pieceType)) { return true; }
       }
     }
@@ -61,8 +62,8 @@ public class GameGrid {
 
   public int numPieces(int pieceType) {
     int pieceCount = 0;
-    for (int x = 0; x != grid.length; ++x) {
-      for (int y = 0; y != grid[x].length; ++y) {
+    for (int x = 0; x != width(); ++x) {
+      for (int y = 0; y != height(); ++y) {
         if (get(x,y) == pieceType) { ++pieceCount; }
       }
     }
@@ -84,10 +85,7 @@ public class GameGrid {
 
   // Flips the piece at (x, y).
   private void flip(int x, int y) {
-    int piece = get(x,y);
-    if (piece == NOTHING)    { set(x,y,NOTHING);    }
-    if (piece == JUST_WHITE) { set(x,y,JUST_BLACK); }
-    if (piece == JUST_BLACK) { set(x,y,JUST_WHITE); }
+    set(x,y, opposite(get(x,y)));
   }
 
   // precondition : canFlipOnDelta(x_0,y_0)
@@ -135,10 +133,5 @@ public class GameGrid {
     return !(x < 0 || y < 0 || x > grid.length || y > grid[0].length);
   }
 
-  private int opposite(int pieceType) {
-    if (pieceType == NOTHING)    { return NOTHING;    }
-    if (pieceType == JUST_WHITE) { return JUST_BLACK; }
-    if (pieceType == JUST_BLACK) { return JUST_WHITE; }
-    else { return ERROR; } // should not reach here
-  }
+  private int opposite(int pieceType) { return pieceType * -1; } // relies on the numeric implementation of NOTHING, JUST_WHITE, and JUST_BLACK
 }
