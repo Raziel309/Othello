@@ -12,6 +12,8 @@ import java.awt.Font;
 import org.newdawn.slick.*;
 import org.newdawn.slick.font.effects.ColorEffect;
 
+import GameGrid;
+
 public class Game {
   public Game() {
     setup();
@@ -70,9 +72,9 @@ public class Game {
 
   public void drawCircle(float cx, float cy, float r, int numSegments, int pieceType) {
     final float color[][] = new float[3][4];
-    color[GameGrid.NOTHING]    = new float[] {0.0, 0.0, 0.0, 0.0};
-    color[GameGrid.JUST_WHITE] = new float[] {1.0, 1.0, 1.0, 1.0};
-    color[GameGrid.JUST_BLACK] = new float[] {0.0, 0.0, 0.0, 1.0};
+    color[GameGrid.NOTHING]    = new float[] {0.0f, 0.0f, 0.0f, 0.0f};
+    color[GameGrid.JUST_WHITE] = new float[] {1.0f, 1.0f, 1.0f, 1.0f};
+    color[GameGrid.JUST_BLACK] = new float[] {0.0f, 0.0f, 0.0f, 1.0f};
 
     GL11.glPushMatrix();
     GL11.glTranslatef(cx,cy,0);
